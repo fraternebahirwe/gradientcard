@@ -5,7 +5,7 @@ body {
     align-items: center;
     min-height: 100vh;
     font-family: sans-serif;
-    background: rgb(236, 242, 255);
+    background: rgb(114, 141, 200);
 }
 
 /* Conteneur principal */
@@ -27,6 +27,16 @@ body {
     border-radius: 2em;
  }
 
+ .result p{
+    color: rgb(186, 181, 181);
+ }
+ .result:hover {
+background: linear-gradient(#a09898, #147380);
+ }
+
+h3 {
+    color:rgb(6, 31, 30);
+}
 .circle { 
     width: 120px; 
     height: 120px; 
@@ -39,6 +49,7 @@ body {
 
 .circle b {
      font-size: 3em;
+     color:#a888e8;
  }
 
 /* Panneau summary */
@@ -49,6 +60,7 @@ body {
     flex-direction: column; 
     gap: 1em; 
 }
+
 
 .item {
      display: flex; 
@@ -90,7 +102,7 @@ button {
 }
 
 button:hover {
-     background: linear-gradient(#6943ff, #2f2ce9);
+background: linear-gradient(#6943ff, #2f2ce9);
  }
 
  @media screen and (max-width: 600px)  {
