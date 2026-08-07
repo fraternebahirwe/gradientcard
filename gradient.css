@@ -34,8 +34,40 @@ body {
     align-items: center;
     min-height: 100vh;
     font-family: 'Hanken Grotesk', system-ui, sans-serif;
-    background-color: var(--clr-neutral-pale-blue);
     padding: 0;
+    position: relative;
+    overflow-x: hidden;
+    
+    /* Fond de base doux */
+    background-color: var(--clr-neutral-pale-blue);
+}
+
+/* Génération des aurores lumineuses en arrière-plan */
+body::before, body::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.6;
+}
+
+body::before {
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, hsla(252, 100%, 67%, 0.4) 0%, transparent 70%);
+    top: 10%;
+    left: 15%;
+    animation: floatAmbient 12s ease-in-out infinite alternate;
+}
+
+body::after {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, hsla(234, 85%, 45%, 0.3) 0%, transparent 70%);
+    bottom: 10%;
+    right: 15%;
+    animation: floatAmbient 16s ease-in-out infinite alternate-reverse;
 }
 
 /* ==========================================================================
@@ -205,6 +237,21 @@ body {
     transform: scale(0.98);
 }
 
+
+/* ==========================================================================
+   7. ANIMATIONS D'AMBIANCE
+   ========================================================================== */
+@keyframes floatAmbient {
+    0% {
+        transform: translate(0, 0) scale(1);
+    }
+    50% {
+        transform: translate(40px, -30px) scale(1.15);
+    }
+    100% {
+        transform: translate(-20px, 50px) scale(0.9);
+    }
+}
 /* ==========================================================================
    6. RESPONSIVE MEDIA QUERIES (ÉCRANS LARGES)
    ========================================================================== */
