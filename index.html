@@ -1,31 +1,90 @@
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta  charset="UTF-8">
-        <link rel="icon" href="frate.png" type="image/x-icon">
-        <title>Gradient card</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link href="gradient.css" rel="stylesheet">
-     </head>
-    <body>
-        <div class="card">
-            <!-- Section Gauche -->
-            <section class="result">
-                <h3>Your Result</h3>
-                <div class="circle"><b>76</b>of 100</div>
-                <h2>Great</h2>
-                <p>Your scored higher than 65% of the people who have taken these tests.</p>
-            </section>
+```html
+<!-- =========================
+     SUMMARY SECTION
+========================== -->
 
-            <!-- Section Droite -->
-            <section class="summary">
-                <h3>Summary</h3>
-                <div class="item red"><span>Reaction</span> <b>80 / 100</b></div>
-                <div class="item yellow"><span>Memory</span> <b>92 / 100</b></div>
-                <div class="item green"><span>Verbal</span> <b>61 / 100</b></div>
-                <div class="item blue"><span>Visual</span> <b>73 / 100</b></div>
-                <button>Continue</button>
-            </section>
-        </div>
-    </body>
-</html>
+<section class="summary" aria-labelledby="summary-title">
+
+  <div class="summary-header">
+    <h2 id="summary-title">Summary</h2>
+    <p>Review your performance</p>
+  </div>
+
+
+  <!-- Reaction -->
+  <div class="summary-list">
+
+    <div class="summary-item reaction">
+      <div class="item-label">
+        <span class="item-icon" aria-hidden="true">⚡</span>
+        <span>Reaction</span>
+      </div>
+
+      <div class="item-score">
+        <strong>80</strong>
+        <span>/ 100</span>
+      </div>
+    </div>
+
+
+    <!-- Memory -->
+    <div class="summary-item memory">
+
+      <div class="item-label">
+        <span class="item-icon" aria-hidden="true">🧠</span>
+        <span>Memory</span>
+      </div>
+
+      <div class="item-score">
+        <strong>92</strong>
+        <span>/ 100</span>
+      </div>
+
+    </div>
+
+
+    <!-- Verbal -->
+    <div class="summary-item verbal">
+
+      <div class="item-label">
+        <span class="item-icon" aria-hidden="true">💬</span>
+        <span>Verbal</span>
+      </div>
+
+      <div class="item-score">
+        <strong>61</strong>
+        <span>/ 100</span>
+      </div>
+
+    </div>
+
+
+    <!-- Visual -->
+    <div class="summary-item visual">
+
+      <div class="item-label">
+        <span class="item-icon" aria-hidden="true">👁</span>
+        <span>Visual</span>
+      </div>
+
+      <div class="item-score">
+        <strong>73</strong>
+        <span>/ 100</span>
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- Continue Button -->
+  <button
+    type="button"
+    class="continue-btn"
+    id="continue-btn"
+  >
+    Continue
+  </button>
+
+</section>
+```
