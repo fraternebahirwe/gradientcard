@@ -2,7 +2,7 @@
    1. SYSTEM DESIGN & VARIABLES
    ========================================================================== */
 :root {
-    /* Couleurs Primaires (Texte & Éléments) */
+    /* Couleurs Primaires */
     --clr-reaction: hsl(0, 100%, 67%);
     --clr-memory: hsl(39, 100%, 56%);
     --clr-verbal: hsl(166, 100%, 37%);
@@ -21,7 +21,7 @@
     --clr-neutral-dark-blue: hsl(224, 30%, 27%);
 }
 
-/* Reset CSS de base pour un meilleur contrôle */
+/* Reset CSS */
 *, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
@@ -34,22 +34,20 @@ body {
     align-items: center;
     min-height: 100vh;
     font-family: 'Hanken Grotesk', system-ui, sans-serif;
-    padding: 0;
+    padding: 1.5rem;
     position: relative;
     overflow-x: hidden;
-    
-    /* Fond de base doux */
     background-color: var(--clr-neutral-pale-blue);
 }
 
-/* Génération des aurores lumineuses en arrière-plan */
+/* Éléments flous animés en arrière-plan */
 body::before, body::after {
     content: '';
     position: absolute;
     border-radius: 50%;
     filter: blur(80px);
     z-index: -1;
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
 body::before {
@@ -71,14 +69,16 @@ body::after {
 }
 
 /* ==========================================================================
-   2. CONTENEUR PRINCIPAL (CARD CONTEXT)
+   2. CONTENEUR CARD (EFFET DÉPOLI)
    ========================================================================== */
 .card { 
     display: flex;
-    flex-direction: column; /* Mobile first: empilé par défaut */
+    flex-direction: column; 
     width: 100%;
     max-width: 736px;
-    background: var(--clr-neutral-white);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(10px); 
+    border-radius: 2rem;
     box-shadow: 0px 30px 60px rgba(61, 108, 236, 0.15); 
 }
 
@@ -88,9 +88,9 @@ body::after {
 .result-panel { 
     background: linear-gradient(to bottom, var(--grad-bg-start), var(--grad-bg-end)); 
     color: var(--clr-neutral-white);
-    padding: 2.5rem 3.5rem; 
+    padding: 2.5rem 2rem; 
     text-align: center; 
-    border-radius: 0 0 2rem 2rem; /* Coins arrondis uniquement en bas sur mobile */
+    border-radius: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -156,7 +156,6 @@ body::after {
     font-weight: 700;
 }
 
-/* Structure de la liste */
 .summary-list {
     list-style: none;
     display: flex;
@@ -192,29 +191,14 @@ body::after {
     color: rgba(48, 59, 90, 0.5);
 }
 
-/* Variations dynamiques des lignes de stats (Fonds transparents & Couleurs) */
-.category-reaction { 
-    background-color: hsla(0, 100%, 67%, 0.06); 
-    color: var(--clr-reaction); 
-}
-
-.category-memory { 
-    background-color: hsla(39, 100%, 56%, 0.06); 
-    color: var(--clr-memory); 
-}
-
-.category-verbal { 
-    background-color: hsla(166, 100%, 37%, 0.06); 
-    color: var(--clr-verbal); 
-}
-
-.category-visual { 
-    background-color: hsla(234, 85%, 45%, 0.06); 
-    color: var(--clr-visual); 
-}
+/* Variations dynamiques des lignes */
+.category-reaction { background-color: hsla(0, 100%, 67%, 0.06); color: var(--clr-reaction); }
+.category-memory { background-color: hsla(39, 100%, 56%, 0.06); color: var(--clr-memory); }
+.category-verbal { background-color: hsla(166, 100%, 37%, 0.06); color: var(--clr-verbal); }
+.category-visual { background-color: hsla(234, 85%, 45%, 0.06); color: var(--clr-visual); }
 
 /* ==========================================================================
-   5. BOUTON D'ACTION INTERACTIF
+   5. BOUTON CONTINUER
    ========================================================================== */
 .btn-continue {
      background-color: var(--clr-neutral-dark-blue); 
@@ -226,10 +210,12 @@ body::after {
      font-weight: 700;
      margin-top: 0.5rem; 
      cursor: pointer; 
-     transition: background-color 0.2s ease, transform 0.1s ease;
+     outline: none;
+     transition: background 0.2s ease, transform 0.1s ease;
 }
 
-.btn-continue:hover {
+.btn-continue:hover,
+.btn-continue:focus-visible {
     background: linear-gradient(to bottom, var(--grad-bg-start), var(--grad-bg-end));
 }
 
@@ -237,9 +223,26 @@ body::after {
     transform: scale(0.98);
 }
 
+/* ==========================================================================
+   6. RESPONSIVE DESKTOP (ALIGNE EN LIGNE)
+   ========================================================================== */
+@media screen and (min-width: 640px) {
+    .card {
+        flex-direction: row; 
+    }
+
+    .result-panel, .summary-panel {
+        flex: 1;
+        padding: 2.5rem 2.5rem 3.5rem 2.5rem;
+    }
+
+    .result-panel {
+        border-radius: 2rem; 
+    }
+}
 
 /* ==========================================================================
-   7. ANIMATIONS D'AMBIANCE
+   7. KEYFRAMES ANIMATION FOND
    ========================================================================== */
 @keyframes floatAmbient {
     0% {
@@ -250,28 +253,5 @@ body::after {
     }
     100% {
         transform: translate(-20px, 50px) scale(0.9);
-    }
-}
-/* ==========================================================================
-   6. RESPONSIVE MEDIA QUERIES (ÉCRANS LARGES)
-   ========================================================================== */
-@media screen and (min-width: 640px) {
-    body {
-        padding: 1.5rem;
-    }
-    
-    .card {
-        flex-direction: row; /* Aligne le panneau gauche et droit côte à côte */
-        border-radius: 2rem;
-        overflow: hidden; /* Assure que le gradient ne dépasse pas des arrondis */
-    }
-
-    .result-panel, .summary-panel {
-        flex: 1;
-        padding: 2.5rem 2.5rem 3.5rem 2.5rem;
-    }
-
-    .result-panel {
-        border-radius: 2rem; /* Arrondit tous les angles du bloc gauche sur PC */
     }
 }
