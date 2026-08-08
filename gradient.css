@@ -1,257 +1,1061 @@
 /* ==========================================================================
-   1. SYSTEM DESIGN & VARIABLES
+   1. DESIGN SYSTEM & VARIABLES
    ========================================================================== */
+
 :root {
-    /* Couleurs Primaires */
+    /* Category Colors */
     --clr-reaction: hsl(0, 100%, 67%);
     --clr-memory: hsl(39, 100%, 56%);
     --clr-verbal: hsl(166, 100%, 37%);
     --clr-visual: hsl(234, 85%, 45%);
 
-    /* Gradients (Panneau Résultat) */
+    /* Result Gradient */
     --grad-bg-start: hsl(252, 100%, 67%);
     --grad-bg-end: hsl(241, 81%, 54%);
+
+    /* Score Circle */
     --grad-circle-start: hsla(256, 72%, 46%, 1);
     --grad-circle-end: hsla(241, 72%, 46%, 0);
 
-    /* Couleurs Neutres */
-    --clr-neutral-white: hsl(0, 0%, 100%);
-    --clr-neutral-pale-blue: hsl(221, 100%, 96%);
-    --clr-neutral-light-lavender: hsl(241, 100%, 89%);
-    --clr-neutral-dark-blue: hsl(224, 30%, 27%);
+    /* Neutral Colors */
+    --clr-white: hsl(0, 0%, 100%);
+    --clr-pale-blue: hsl(221, 100%, 96%);
+    --clr-light-lavender: hsl(241, 100%, 89%);
+    --clr-dark-blue: hsl(224, 30%, 27%);
+
+    /* Glass */
+    --glass-bg: rgba(255, 255, 255, 0.82);
+    --glass-border: rgba(255, 255, 255, 0.65);
+
+    /* Shadows */
+    --shadow-card:
+        0 30px 80px rgba(61, 108, 236, 0.18),
+        0 10px 30px rgba(0, 0, 0, 0.05);
+
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.4s ease;
 }
 
-/* Reset CSS */
-*, *::before, *::after {
+
+/* ==========================================================================
+   2. RESET
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-body { 
-    display: flex;
-    justify-content: center; 
-    align-items: center;
+
+/* ==========================================================================
+   3. BODY
+   ========================================================================== */
+
+body {
     min-height: 100vh;
-    font-family: 'Hanken Grotesk', system-ui, sans-serif;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
     padding: 1.5rem;
-    position: relative;
+
+    font-family:
+        "Hanken Grotesk",
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f8faff,
+            #f3e8ff,
+            #ecfeff
+        );
+
+    background-size: 400% 400%;
+
+    animation: gradientBackground 18s ease infinite;
+
     overflow-x: hidden;
-    background-color: var(--clr-neutral-pale-blue);
+
+    position: relative;
 }
 
-/* Éléments flous animés en arrière-plan */
-body::before, body::after {
-    content: '';
-    position: absolute;
+
+/* ==========================================================================
+   4. MULTI-COLOR AMBIENT BACKGROUND
+   ========================================================================== */
+
+body::before,
+body::after {
+    content: "";
+
+    position: fixed;
+
     border-radius: 50%;
-    filter: blur(80px);
+
+    pointer-events: none;
+
+    filter: blur(90px);
+
     z-index: -1;
-    opacity: 0.5;
+
+    opacity: 0.55;
 }
+
+
+/* Purple / Blue Blob */
 
 body::before {
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, hsla(252, 100%, 67%, 0.4) 0%, transparent 70%);
-    top: 10%;
-    left: 15%;
-    animation: floatAmbient 12s ease-in-out infinite alternate;
+    width: 380px;
+    height: 380px;
+
+    top: 5%;
+    left: 8%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(124, 58, 237, 0.45),
+            rgba(59, 130, 246, 0.25),
+            transparent 70%
+        );
+
+    animation:
+        floatingBlobOne 12s ease-in-out infinite alternate;
 }
+
+
+/* Pink / Cyan Blob */
 
 body::after {
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, hsla(234, 85%, 45%, 0.3) 0%, transparent 70%);
-    bottom: 10%;
-    right: 15%;
-    animation: floatAmbient 16s ease-in-out infinite alternate-reverse;
+    width: 420px;
+    height: 420px;
+
+    right: 5%;
+    bottom: 5%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(236, 72, 153, 0.35),
+            rgba(6, 182, 212, 0.25),
+            transparent 70%
+        );
+
+    animation:
+        floatingBlobTwo 16s ease-in-out infinite alternate;
 }
 
+
 /* ==========================================================================
-   2. CONTENEUR CARD (EFFET DÉPOLI)
+   5. CARD
    ========================================================================== */
-.card { 
-    display: flex;
-    flex-direction: column; 
+
+.card {
     width: 100%;
     max-width: 736px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(10px); 
+
+    display: flex;
+    flex-direction: column;
+
+    background: var(--glass-bg);
+
+    border: 1px solid var(--glass-border);
+
     border-radius: 2rem;
-    box-shadow: 0px 30px 60px rgba(61, 108, 236, 0.15); 
+
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    box-shadow: var(--shadow-card);
+
+    overflow: hidden;
+
+    animation: cardEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+
+    transition:
+        transform var(--transition-normal),
+        box-shadow var(--transition-normal);
 }
 
+
+/* Card hover */
+
+.card:hover {
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 40px 90px rgba(61, 108, 236, 0.22),
+        0 15px 35px rgba(0, 0, 0, 0.06);
+}
+
+
 /* ==========================================================================
-   3. PANNEAU RÉSULTAT (GAUCHE)
+   6. RESULT PANEL
    ========================================================================== */
-.result-panel { 
-    background: linear-gradient(to bottom, var(--grad-bg-start), var(--grad-bg-end)); 
-    color: var(--clr-neutral-white);
-    padding: 2.5rem 2rem; 
-    text-align: center; 
-    border-radius: 2rem;
+
+.result-panel {
+    position: relative;
+
     display: flex;
     flex-direction: column;
     align-items: center;
+
     gap: 1.5rem;
+
+    padding: 2.5rem 2rem;
+
+    color: var(--clr-white);
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            145deg,
+            var(--grad-bg-start),
+            var(--grad-bg-end)
+        );
+
+    overflow: hidden;
+
+    isolation: isolate;
 }
+
+
+/* Animated light */
+
+.result-panel::before {
+    content: "";
+
+    position: absolute;
+
+    width: 260px;
+    height: 260px;
+
+    top: -100px;
+    left: -100px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.25),
+            transparent 70%
+        );
+
+    animation: resultGlow 8s ease-in-out infinite alternate;
+
+    z-index: -1;
+}
+
+
+/* Second glow */
+
+.result-panel::after {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    right: -100px;
+    bottom: -100px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255, 0, 204, 0.25),
+            rgba(0, 212, 255, 0.15),
+            transparent 70%
+        );
+
+    animation: resultGlowTwo 10s ease-in-out infinite alternate;
+
+    z-index: -1;
+}
+
+
+/* ==========================================================================
+   7. RESULT TITLE
+   ========================================================================== */
 
 .result-panel .section-title {
-    color: var(--clr-neutral-light-lavender);
+    color: var(--clr-light-lavender);
+
     font-size: 1.25rem;
+
     font-weight: 700;
+
+    letter-spacing: 0.02em;
+
+    animation: fadeUp 0.8s ease 0.2s both;
 }
 
-.score-circle { 
-    width: 140px; 
-    height: 140px; 
-    background: linear-gradient(to bottom, var(--grad-circle-start), var(--grad-circle-end));
-    border-radius: 50%; 
+
+/* ==========================================================================
+   8. SCORE CIRCLE
+   ========================================================================== */
+
+.score-circle {
+    position: relative;
+
+    width: 150px;
+    height: 150px;
+
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            rgba(255, 255, 255, 0.12),
+            transparent 30%
+        ),
+        linear-gradient(
+            to bottom,
+            var(--grad-circle-start),
+            var(--grad-circle-end)
+        );
+
+    box-shadow:
+        inset 0 4px 12px rgba(255, 255, 255, 0.08),
+        0 15px 35px rgba(37, 25, 120, 0.25);
+
+    animation:
+        scoreAppear 1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both,
+        scoreFloat 4s ease-in-out 1.3s infinite;
 }
+
+
+/* Rotating colorful border */
+
+.score-circle::before {
+    content: "";
+
+    position: absolute;
+
+    inset: -5px;
+
+    border-radius: 50%;
+
+    background:
+        conic-gradient(
+            from 0deg,
+            #ff6b6b,
+            #ffd93d,
+            #6bcB77,
+            #4d96ff,
+            #9b5de5,
+            #ff6b6b
+        );
+
+    z-index: -1;
+
+    animation: rotateColors 5s linear infinite;
+}
+
+
+/* Inner circle */
+
+.score-circle::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 3px;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            to bottom,
+            hsla(256, 72%, 46%, 1),
+            hsla(241, 72%, 46%, 0.9)
+        );
+
+    z-index: -1;
+}
+
+
+/* ==========================================================================
+   9. SCORE NUMBER
+   ========================================================================== */
 
 .score-number {
-     font-size: 3.5rem;
-     font-weight: 800;
-     line-height: 1;
-     color: var(--clr-neutral-white);
+    font-size: 3.5rem;
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    color: var(--clr-white);
+
+    text-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.15);
 }
 
+
+/* Maximum score */
+
 .score-max {
+    margin-top: 0.3rem;
+
+    color: var(--clr-light-lavender);
+
     font-size: 0.9rem;
-    color: var(--clr-neutral-light-lavender);
-    opacity: 0.6;
-    margin-top: 0.25rem;
+
+    opacity: 0.7;
 }
+
+
+/* ==========================================================================
+   10. SCORE STATUS
+   ========================================================================== */
 
 .score-status {
     font-size: 1.75rem;
+
     font-weight: 700;
+
+    animation: fadeUp 0.8s ease 0.6s both;
 }
 
-.score-description {
-    color: var(--clr-neutral-light-lavender);
-    font-size: 0.95rem;
-    line-height: 1.4;
-    max-width: 260px;
-}
 
 /* ==========================================================================
-   4. PANNEAU SUMMARY (DROITE)
+   11. SCORE DESCRIPTION
    ========================================================================== */
-.summary-panel {
-    padding: 2.5rem; 
-    display: flex;
-    flex-direction: column; 
-    gap: 1.5rem; 
+
+.score-description {
+    max-width: 260px;
+
+    color: var(--clr-light-lavender);
+
+    font-size: 0.95rem;
+
+    line-height: 1.5;
+
+    animation: fadeUp 0.8s ease 0.8s both;
 }
 
+
+/* ==========================================================================
+   12. SUMMARY PANEL
+   ========================================================================== */
+
+.summary-panel {
+    display: flex;
+    flex-direction: column;
+
+    gap: 1.5rem;
+
+    padding: 2.5rem;
+}
+
+
+/* Summary title */
+
 .summary-panel .section-title {
-    color: var(--clr-neutral-dark-blue);
+    color: var(--clr-dark-blue);
+
     font-size: 1.25rem;
+
     font-weight: 700;
 }
 
+
+/* ==========================================================================
+   13. SUMMARY LIST
+   ========================================================================== */
+
 .summary-list {
-    list-style: none;
     display: flex;
     flex-direction: column;
+
     gap: 1rem;
+
+    list-style: none;
 }
 
+
+/* ==========================================================================
+   14. SUMMARY ITEMS
+   ========================================================================== */
+
 .summary-item {
-     display: flex; 
-     justify-content: space-between; 
-     align-items: center;
-     padding: 1rem; 
-     border-radius: 0.75rem; 
-     font-weight: 700;
-     font-size: 1rem;
+    position: relative;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 1rem;
+
+    border-radius: 0.85rem;
+
+    font-size: 1rem;
+
+    font-weight: 700;
+
+    border: 1px solid transparent;
+
+    overflow: hidden;
+
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        border-color var(--transition-fast);
 }
+
+
+/* Animated shine */
+
+.summary-item::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -100%;
+
+    width: 60%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.35),
+            transparent
+        );
+
+    transform: skewX(-20deg);
+
+    transition: left 0.6s ease;
+}
+
+
+/* Hover */
+
+.summary-item:hover {
+    transform: translateX(6px);
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.06);
+
+    border-color: rgba(255, 255, 255, 0.8);
+}
+
+
+.summary-item:hover::before {
+    left: 140%;
+}
+
+
+/* ==========================================================================
+   15. CATEGORY
+   ========================================================================== */
 
 .category-title {
     display: flex;
     align-items: center;
+
     gap: 0.75rem;
 }
 
-.category-score {
-    color: var(--clr-neutral-dark-blue);
+
+.category-title img {
+    width: 20px;
+    height: 20px;
+
+    object-fit: contain;
 }
+
+
+/* ==========================================================================
+   16. CATEGORY SCORE
+   ========================================================================== */
+
+.category-score {
+    color: var(--clr-dark-blue);
+}
+
 
 .score-actual {
     font-weight: 800;
 }
 
+
 .score-divider {
-    color: rgba(48, 59, 90, 0.5);
+    color: rgba(48, 59, 90, 0.45);
 }
 
-/* Variations dynamiques des lignes */
-.category-reaction { background-color: hsla(0, 100%, 67%, 0.06); color: var(--clr-reaction); }
-.category-memory { background-color: hsla(39, 100%, 56%, 0.06); color: var(--clr-memory); }
-.category-verbal { background-color: hsla(166, 100%, 37%, 0.06); color: var(--clr-verbal); }
-.category-visual { background-color: hsla(234, 85%, 45%, 0.06); color: var(--clr-visual); }
 
 /* ==========================================================================
-   5. BOUTON CONTINUER
+   17. CATEGORY COLORS
    ========================================================================== */
-.btn-continue {
-     background-color: var(--clr-neutral-dark-blue); 
-     color: var(--clr-neutral-white); 
-     padding: 1rem 2rem; 
-     border: none; 
-     border-radius: 2rem; 
-     font-size: 1rem;
-     font-weight: 700;
-     margin-top: 0.5rem; 
-     cursor: pointer; 
-     outline: none;
-     transition: background 0.2s ease, transform 0.1s ease;
+
+.category-reaction {
+    background:
+        linear-gradient(
+            90deg,
+            hsla(0, 100%, 67%, 0.10),
+            hsla(0, 100%, 67%, 0.04)
+        );
+
+    color: var(--clr-reaction);
 }
 
-.btn-continue:hover,
-.btn-continue:focus-visible {
-    background: linear-gradient(to bottom, var(--grad-bg-start), var(--grad-bg-end));
+
+.category-memory {
+    background:
+        linear-gradient(
+            90deg,
+            hsla(39, 100%, 56%, 0.12),
+            hsla(39, 100%, 56%, 0.04)
+        );
+
+    color: var(--clr-memory);
 }
+
+
+.category-verbal {
+    background:
+        linear-gradient(
+            90deg,
+            hsla(166, 100%, 37%, 0.11),
+            hsla(166, 100%, 37%, 0.04)
+        );
+
+    color: var(--clr-verbal);
+}
+
+
+.category-visual {
+    background:
+        linear-gradient(
+            90deg,
+            hsla(234, 85%, 45%, 0.11),
+            hsla(234, 85%, 45%, 0.04)
+        );
+
+    color: var(--clr-visual);
+}
+
+
+/* ==========================================================================
+   18. CONTINUE BUTTON
+   ========================================================================== */
+
+.btn-continue {
+    position: relative;
+
+    width: 100%;
+
+    padding: 1rem 2rem;
+
+    margin-top: 0.5rem;
+
+    border: none;
+
+    border-radius: 2rem;
+
+    color: var(--clr-white);
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--clr-dark-blue),
+            hsl(240, 40%, 25%)
+        );
+
+    font-size: 1rem;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    overflow: hidden;
+
+    transition:
+        transform var(--transition-fast),
+        box-shadow var(--transition-fast),
+        background var(--transition-normal);
+}
+
+
+/* Button shine */
+
+.btn-continue::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: -120%;
+
+    width: 70%;
+    height: 100%;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.35),
+            transparent
+        );
+
+    transform: skewX(-20deg);
+
+    transition: left 0.6s ease;
+}
+
+
+.btn-continue:hover {
+    background:
+        linear-gradient(
+            90deg,
+            #6d28d9,
+            #2563eb,
+            #0891b2
+        );
+
+    background-size: 200% 200%;
+
+    animation: buttonGradient 4s ease infinite;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+        0 12px 25px rgba(79, 70, 229, 0.3);
+}
+
+
+.btn-continue:hover::before {
+    left: 140%;
+}
+
+
+.btn-continue:focus-visible {
+    outline: 3px solid rgba(99, 102, 241, 0.35);
+
+    outline-offset: 4px;
+}
+
 
 .btn-continue:active {
-    transform: scale(0.98);
+    transform: scale(0.97);
 }
 
+
 /* ==========================================================================
-   6. RESPONSIVE DESKTOP (ALIGNE EN LIGNE)
+   19. RESPONSIVE DESKTOP
    ========================================================================== */
+
 @media screen and (min-width: 640px) {
+
     .card {
-        flex-direction: row; 
+        flex-direction: row;
     }
 
-    .result-panel, .summary-panel {
+    .result-panel,
+    .summary-panel {
         flex: 1;
-        padding: 2.5rem 2.5rem 3.5rem 2.5rem;
+
+        padding:
+            2.5rem
+            2.5rem
+            3.5rem;
     }
 
     .result-panel {
-        border-radius: 2rem; 
+        border-radius: 2rem;
+    }
+
+    .summary-panel {
+        justify-content: center;
     }
 }
 
+
 /* ==========================================================================
-   7. KEYFRAMES ANIMATION FOND
+   20. MOBILE
    ========================================================================== */
-@keyframes floatAmbient {
+
+@media screen and (max-width: 639px) {
+
+    body {
+        padding: 1rem;
+    }
+
+    .card {
+        border-radius: 1.5rem;
+    }
+
+    .result-panel {
+        border-radius: 1.5rem;
+        padding: 2rem 1.5rem;
+    }
+
+    .summary-panel {
+        padding: 2rem 1.5rem;
+    }
+
+    .score-circle {
+        width: 135px;
+        height: 135px;
+    }
+
+    .score-number {
+        font-size: 3rem;
+    }
+
+    .summary-item {
+        padding: 0.9rem;
+    }
+}
+
+
+/* ==========================================================================
+   21. BACKGROUND ANIMATION
+   ========================================================================== */
+
+@keyframes gradientBackground {
+
     0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+/* ==========================================================================
+   22. FLOATING BLOB ANIMATIONS
+   ========================================================================== */
+
+@keyframes floatingBlobOne {
+
+    0% {
+        transform:
+            translate(0, 0)
+            scale(1)
+            rotate(0deg);
+    }
+
+    50% {
+        transform:
+            translate(120px, -70px)
+            scale(1.2)
+            rotate(90deg);
+    }
+
+    100% {
+        transform:
+            translate(-60px, 100px)
+            scale(0.9)
+            rotate(180deg);
+    }
+}
+
+
+@keyframes floatingBlobTwo {
+
+    0% {
+        transform:
+            translate(0, 0)
+            scale(1);
+    }
+
+    50% {
+        transform:
+            translate(-100px, -80px)
+            scale(1.25);
+    }
+
+    100% {
+        transform:
+            translate(80px, 60px)
+            scale(0.85);
+    }
+}
+
+
+/* ==========================================================================
+   23. CARD ENTRANCE
+   ========================================================================== */
+
+@keyframes cardEntrance {
+
+    from {
+        opacity: 0;
+
+        transform:
+            translateY(40px)
+            scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            translateY(0)
+            scale(1);
+    }
+}
+
+
+/* ==========================================================================
+   24. SCORE ANIMATIONS
+   ========================================================================== */
+
+@keyframes scoreAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+            scale(0.4)
+            rotate(-20deg);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+            scale(1)
+            rotate(0);
+    }
+}
+
+
+@keyframes scoreFloat {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+
+@keyframes rotateColors {
+
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ==========================================================================
+   25. RESULT GLOW
+   ========================================================================== */
+
+@keyframes resultGlow {
+
+    from {
         transform: translate(0, 0) scale(1);
     }
-    50% {
-        transform: translate(40px, -30px) scale(1.15);
+
+    to {
+        transform: translate(80px, 60px) scale(1.3);
     }
+}
+
+
+@keyframes resultGlowTwo {
+
+    from {
+        transform: translate(0, 0) scale(1);
+    }
+
+    to {
+        transform: translate(-60px, -80px) scale(1.25);
+    }
+}
+
+
+/* ==========================================================================
+   26. FADE UP
+   ========================================================================== */
+
+@keyframes fadeUp {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+
+/* ==========================================================================
+   27. BUTTON GRADIENT
+   ========================================================================== */
+
+@keyframes buttonGradient {
+
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
     100% {
-        transform: translate(-20px, 50px) scale(0.9);
+        background-position: 0% 50%;
+    }
+}
+
+
+/* ==========================================================================
+   28. ACCESSIBILITY
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }
